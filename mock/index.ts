@@ -172,7 +172,7 @@ export default [
                   component: '/list/base/index',
                   meta: {
                     title: {
-                      zh_CN: '基础列表页MOCK哈哈',
+                      zh_CN: '基础列表',
                       en_US: 'Base List',
                     },
                   },

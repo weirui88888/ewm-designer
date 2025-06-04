@@ -110,3 +110,4 @@ jobs:
             docker stop ewm-designer-app || true
             docker rm ewm-designer-app || true
             docker run -d -p 8686:8686 --name ewm-designer-app ewm-designer:latest
+            docker image prune -f
