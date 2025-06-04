@@ -28,3 +28,8 @@ jobs:
         run: |
           echo "📁 dist 文件树如下："
           tree -a -L 3 dist || find
+
+      - name: Show total size of dist directory
+        run: |
+          echo "📏 dist 总大小如下："
+          du -sh dist
