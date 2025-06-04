@@ -1,0 +1,30 @@
+name: Build and Show Dist Tree
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build mockSite project
+        run: npm run build:mockSite
+
+      - name: Show dist directory structure
+        run: |
+          echo "📁 dist 文件树如下："
+          tree -a -L 3 dist || find
