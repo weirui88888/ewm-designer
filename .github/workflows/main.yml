@@ -60,7 +60,53 @@ jobs:
           tree -L 1
 
       - name: Build Docker image
-        run: docker build -t my-app:latest .
+        run: docker build -t ewm-designer:latest .
 
       - name: List Docker images
         run: docker images
+
+      - name: Save Docker image to tar
+        run: docker save -o ewm-designer.tar ewm-designer:latest
+
+      - name: Upload image tar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ewm-designer-tar
+          path: ewm-designer.tar
+
+  deploy-server:
+    runs-on: ubuntu-latest
+    needs: docker-build
+
+    steps:
+      - name: Download docker image tar
+        uses: actions/download-artifact@v4
+        with:
+          name: ewm-designer-tar
+          path: ./
+
+      - name: List top level to confirm tar exists
+        run: ls -lh
+
+      # - name: Copy image to remote server
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.REMOTE_HOST }}
+      #     username: ${{ secrets.REMOTE_USER }}
+      #     key: ${{ secrets.REMOTE_SSH_KEY }}
+      #     port: ${{ secrets.REMOTE_PORT || 22 }}
+      #     source: "my-app.tar"
+      #     target: "~/"
+
+      # - name: Load and run Docker image on remote server
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.REMOTE_HOST }}
+      #     username: ${{ secrets.REMOTE_USER }}
+      #     key: ${{ secrets.REMOTE_SSH_KEY }}
+      #     port: ${{ secrets.REMOTE_PORT || 22 }}
+      #     script: |
+      #       docker load -i ~/my-app.tar
+      #       docker stop my-app || true
+      #       docker rm my-app || true
+      #       docker run -d -p 8686:8686 --name my-app my-app:latest
