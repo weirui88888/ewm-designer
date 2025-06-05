@@ -160,7 +160,7 @@ export default [
               redirect: '/list/base',
               meta: {
                 title: {
-                  zh_CN: '列表页生产MOCK',
+                  zh_CN: '列表页生产',
                   en_US: 'List',
                 },
                 icon: 'view-list',
@@ -172,7 +172,7 @@ export default [
                   component: '/list/base/index',
                   meta: {
                     title: {
-                      zh_CN: '基础列表',
+                      zh_CN: '基础列表页',
                       en_US: 'Base List',
                     },
                   },
