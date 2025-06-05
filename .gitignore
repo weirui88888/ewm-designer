@@ -23,6 +23,7 @@ tmp*
 temp*
 coverage
 test-report.html
+stats.html
 .idea/
 yarn-error.log
 *.zip

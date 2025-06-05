@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { ConfigEnv, loadEnv, UserConfig } from 'vite';
 import { viteMockServe } from 'vite-plugin-mock';
 import svgLoader from 'vite-svg-loader';
@@ -48,6 +49,10 @@ export default ({ mode }: ConfigEnv): UserConfig => {
 
           setupProdMockServer();
       `,
+      }),
+      visualizer({
+        template: 'treemap',
+        gzipSize: true,
       }),
       svgLoader(),
     ],

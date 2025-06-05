@@ -24,6 +24,11 @@ jobs:
       - name: Build mockSite project
         run: npm run build:mockSite
 
+      - name: Copy stats.html to dist
+        run: |
+          echo "📄 拷贝 stats.html 到 dist 目录..."
+          cp stats.html dist/
+
       - name: Show dist directory structure
         run: |
           echo "📁 dist 文件树如下："
