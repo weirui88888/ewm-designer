@@ -117,6 +117,7 @@ import ColorContainer from '@/components/color/index.vue';
 import Thumbnail from '@/components/thumbnail/index.vue';
 import { DEFAULT_COLOR_OPTIONS } from '@/config/color';
 import STYLE_CONFIG from '@/config/style';
+import { useLogTrack } from '@/hooks';
 import { t } from '@/locales';
 import { useSettingStore } from '@/store';
 
@@ -178,6 +179,7 @@ const onPopupVisibleChange = (visible: boolean, context: PopupVisibleChangeConte
 const handleCopy = () => {
   const sourceText = JSON.stringify(formData.value, null, 4);
   const { copy } = useClipboard({ source: sourceText });
+  useLogTrack('click-copy-button', formData.value);
   copy()
     .then(() => {
       MessagePlugin.closeAll();

@@ -1,6 +1,8 @@
 import * as echarts from 'echarts/core';
 import { onMounted, onUnmounted, Ref, ref, ShallowRef, shallowRef } from 'vue';
 
+import { useUserStore } from '@/store';
+
 /**
  * eChart hook
  * @param domId
@@ -57,4 +59,17 @@ export const useCounter = (duration = 60): [Ref<number>, () => void] => {
       }, 1000);
     },
   ];
+};
+
+export const useLogTrack = (event: string, payload: Record<string, any> = {}): void => {
+  const userStore = useUserStore();
+  const { userInfo } = userStore;
+  payload = {
+    ...payload,
+    userInfo,
+  };
+  if (import.meta.env.MODE === 'site' || import.meta.env.MODE === 'mockSite') {
+    return window.umami?.track(event, payload);
+  }
+  return console.log(`Event: ${event}`, payload);
 };
