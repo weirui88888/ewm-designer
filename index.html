@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TDesign Vue Next Starter</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-    <script language="javascript">
-      if (window.location.host === 'tdesign.tencent.com') {
-        const aegis = new Aegis({
-          id: 'rDISNMyXgqWDFPyHMB', // 项目ID，即上报key
-          reportAssetSpeed: true, // 静态资源测速
-        });
-      }
-    </script>
-  </body>
-  
-  <script>
-    window.global = window;
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TDesign Vue Next Starter</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+  <script language="javascript">
+    if (window.location.host === 'ewm-designer.xdzi8b.cn') {
+      const script = document.createElement('script');
+      script.src = 'https://cloud.umami.is/script.js';
+      script.async = true;
+      script.setAttribute('data-website-id', '36d18aa5-a481-417f-8889-28e20bef8e42');
+      document.body.appendChild(script);
+    }
   </script>
+</body>
+
+<script>
+  window.global = window;
+</script>
+
 </html>
