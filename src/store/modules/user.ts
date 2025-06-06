@@ -40,6 +40,7 @@ export const useUserStore = defineStore('user', {
         //   main_: 'main_token',
         //   dev_: 'dev_token',
         // }[password];
+        window.umami.identify(userInfo.account as string);
         return {
           code: 200,
           message: '登录成功',
@@ -58,13 +59,13 @@ export const useUserStore = defineStore('user', {
       const mockRemoteUserInfo = async (token: string) => {
         if (token === 'xdz') {
           return {
-            name: 'Xdzi8b',
+            name: 'xdz',
             roles: ['all'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
           };
         }
         if (token === 'txd') {
           return {
-            name: 'Taixd',
+            name: 'txd',
             roles: ['UserIndex', 'DashboardBase', 'login'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
           };
         }
