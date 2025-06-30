@@ -40,14 +40,13 @@ export const useUserStore = defineStore('user', {
         //   main_: 'main_token',
         //   dev_: 'dev_token',
         // }[password];
-        window.umami.identify(userInfo.account as string);
+        window?.umami?.identify(userInfo.account as string);
         return {
           code: 200,
           message: '登录成功',
           data: `${userInfo.account}`,
         };
       };
-
       const res = await mockLogin(userInfo);
       if (res.code === 200) {
         this.token = res.data;
