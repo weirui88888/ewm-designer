@@ -89,9 +89,10 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useCounter } from '@/hooks';
 import { t } from '@/locales';
-import { useUserStore } from '@/store';
+import { usePermissionStore, useUserStore } from '@/store';
 
 const userStore = useUserStore();
+const permissionStore = usePermissionStore();
 
 const INITIAL_DATA = {
   phone: '',
@@ -142,7 +143,8 @@ const onSubmit = async (ctx: SubmitContext) => {
       MessagePlugin.success('登录成功');
       const redirect = route.query.redirect as string;
       const redirectUrl = redirect ? decodeURIComponent(redirect) : '/dashboard';
-      router.push(redirectUrl);
+      permissionStore.isFirstEnterAfterLogin = true;
+      router.push({ path: redirectUrl });
     } catch (e) {
       console.log(e);
       MessagePlugin.error(e.message);

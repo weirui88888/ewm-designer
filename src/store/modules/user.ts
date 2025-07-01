@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 
-import { usePermissionStore } from '@/store';
 import type { UserInfo } from '@/types/interface';
 
 const InitUserInfo: UserInfo = {
@@ -22,24 +21,6 @@ export const useUserStore = defineStore('user', {
     async login(userInfo: Record<string, unknown>) {
       const mockLogin = async (userInfo: Record<string, unknown>) => {
         // 登录请求流程
-        console.log(`用户信息:`, userInfo);
-        // const { account, password } = userInfo;
-        // if (account !== 'td') {
-        //   return {
-        //     code: 401,
-        //     message: '账号不存在',
-        //   };
-        // }
-        // if (['main_', 'dev_'].indexOf(password) === -1) {
-        //   return {
-        //     code: 401,
-        //     message: '密码错误',
-        //   };
-        // }
-        // const token = {
-        //   main_: 'main_token',
-        //   dev_: 'dev_token',
-        // }[password];
         window?.umami?.identify(userInfo.account as string);
         return {
           code: 200,
@@ -56,21 +37,21 @@ export const useUserStore = defineStore('user', {
     },
     async getUserInfo() {
       const mockRemoteUserInfo = async (token: string) => {
-        if (token === 'xdz') {
+        if (token === 'admin') {
           return {
-            name: 'xdz',
+            name: 'admin',
             roles: ['all'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
           };
         }
-        if (token === 'txd') {
+        if (token === 'xdz') {
           return {
-            name: 'txd',
-            roles: ['UserIndex', 'DashboardBase', 'login'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
+            name: 'xdz',
+            roles: ['UserIndex', 'DashboardBase', 'form', 'list'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
           };
         }
         return {
           name: 'td_dev',
-          roles: ['UserIndex', 'DashboardBase', 'login'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
+          roles: ['UserIndex', 'DashboardBase', 'FormStep'], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
         };
       };
       const res = await mockRemoteUserInfo(this.token);
@@ -82,12 +63,5 @@ export const useUserStore = defineStore('user', {
       this.userInfo = { ...InitUserInfo };
     },
   },
-  persist: {
-    afterRestore: () => {
-      const permissionStore = usePermissionStore();
-      permissionStore.initRoutes();
-    },
-    key: 'user',
-    paths: ['token'],
-  },
+  persist: true,
 });

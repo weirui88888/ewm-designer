@@ -31,6 +31,6 @@ const headerMenu = computed(() => {
     }
     return [];
   }
-  return menuRouters.value;
+  return menuRouters.value.filter((route) => route.name !== 'result');
 });
 </script>

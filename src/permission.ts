@@ -1,64 +1,67 @@
-import 'nprogress/nprogress.css'; // progress bar style
+import 'nprogress/nprogress.css';
 
-import NProgress from 'nprogress'; // progress bar
+import NProgress from 'nprogress';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { RouteRecordRaw } from 'vue-router';
 
 import router from '@/router';
 import { getPermissionStore, useUserStore } from '@/store';
-import { PAGE_NOT_FOUND_ROUTE } from '@/utils/route/constant';
+
+function findRouteByName(routes: RouteRecordRaw[], name: string): boolean {
+  if (name === 'Result403') return true; // 避免死循环
+  return routes.some((route) => {
+    if (route.name === name) return true;
+    if (route.children) return findRouteByName(route.children, name);
+    return false;
+  });
+}
+
+const whiteList = ['/login'];
 
 NProgress.configure({ showSpinner: false });
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
-
-  const permissionStore = getPermissionStore();
-  const { whiteListRouters } = permissionStore;
-
   const userStore = useUserStore();
+  const permissionStore = getPermissionStore();
 
-  if (userStore.token) {
-    if (to.path === '/login') {
-      next();
+  const hasToken = !!userStore.token;
+  if (hasToken) {
+    if (to.path === '/login' || to.path === '/result/404') {
+      next(); // 已登录访问登录页，放行（你也可以选择重定向首页）
       return;
     }
+
     try {
-      await userStore.getUserInfo();
-
-      const { asyncRoutes } = permissionStore;
-
-      if (asyncRoutes && asyncRoutes.length === 0) {
-        const routeList = await permissionStore.buildAsyncRoutes();
-        routeList.forEach((item: RouteRecordRaw) => {
-          router.addRoute(item);
-        });
-
-        if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
-          // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容
-          next({ path: to.fullPath, replace: true, query: to.query });
-        } else {
-          const redirect = decodeURIComponent((from.query.redirect || to.path) as string);
-          next(to.path === redirect ? { ...to, replace: true } : { path: redirect, query: to.query });
-          return;
-        }
+      // 如果还没初始化路由，就初始化
+      if (permissionStore.routers.length === 0) {
+        console.log('首次进入，初始化权限路由...');
+        await userStore.getUserInfo();
+        await permissionStore.initRoutes(userStore.userInfo.roles);
       }
-      if (router.hasRoute(to.name)) {
+      const hasPermission = findRouteByName(permissionStore.routers, to.name as string);
+      if (hasPermission) {
         next();
+      } else if (permissionStore.isFirstEnterAfterLogin) {
+        next({ name: 'dashboard' }); // 首次登录权限不足，跳首页dashboard
       } else {
-        next(`/`);
+        const query: Recordable = {
+          title: (to.meta.title as { zh_CN: string })?.zh_CN,
+          path: encodeURIComponent(to.path),
+        };
+        next({ name: 'Result403', query }); // Result403
       }
-    } catch (error) {
-      MessagePlugin.error(error.message);
+    } catch (error: any) {
+      MessagePlugin.error(error.message || '路由权限处理异常');
       next({
         path: '/login',
         query: { redirect: encodeURIComponent(to.fullPath) },
       });
-      NProgress.done();
     }
   } else {
-    /* white list router */
-    if (whiteListRouters.indexOf(to.path) !== -1) {
+    // 无 token 的情况
+    // eslint-disable-next-line no-lonely-if
+    if (whiteList.includes(to.path)) {
       next();
     } else {
       next({
@@ -66,17 +69,22 @@ router.beforeEach(async (to, from, next) => {
         query: { redirect: encodeURIComponent(to.fullPath) },
       });
     }
-    NProgress.done();
   }
 });
 
 router.afterEach((to) => {
+  const permissionStore = getPermissionStore();
+  // 离开页面关闭进度条
+  NProgress.done();
+
+  // 如果进入登录页，清空用户信息和权限路由
   if (to.path === '/login') {
     const userStore = useUserStore();
-    const permissionStore = getPermissionStore();
-
     userStore.logout();
-    permissionStore.restoreRoutes();
+    permissionStore.resetRoutes();
   }
-  NProgress.done();
+
+  if (permissionStore.isFirstEnterAfterLogin) {
+    permissionStore.isFirstEnterAfterLogin = false;
+  }
 });

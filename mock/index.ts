@@ -160,7 +160,7 @@ export default [
               redirect: '/list/base',
               meta: {
                 title: {
-                  zh_CN: '列表页生产',
+                  zh_CN: '列表页',
                   en_US: 'List',
                 },
                 icon: 'view-list',

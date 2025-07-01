@@ -35,6 +35,6 @@ const sideMenu = computed(() => {
       }
     });
   }
-  return newMenuRouters;
+  return newMenuRouters.filter((route) => route.name !== 'result');
 });
 </script>

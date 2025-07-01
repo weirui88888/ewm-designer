@@ -23,7 +23,7 @@
           <!-- 全局通知 -->
           <notice />
 
-          <t-tooltip placement="bottom" :content="t('layout.header.code')">
+          <!-- <t-tooltip placement="bottom" :content="t('layout.header.code')">
             <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
               <t-icon name="logo-github" />
             </t-button>
@@ -32,7 +32,7 @@
             <t-button theme="default" shape="square" variant="text" @click="navToHelper">
               <t-icon name="help-circle" />
             </t-button>
-          </t-tooltip>
+          </t-tooltip> -->
           <t-dropdown trigger="click">
             <t-button theme="default" shape="square" variant="text">
               <translate-icon />
@@ -169,10 +169,18 @@ const handleNav = (url: string) => {
 };
 
 const handleLogout = () => {
-  router.push({
-    path: '/login',
-    query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
-  });
+  const unExpectRedirectRouteNames = ['Result403', 'Result404'];
+  const currentRouteName = router.currentRoute.value.name;
+  if (!unExpectRedirectRouteNames.includes(currentRouteName as string)) {
+    router.push({
+      path: '/login',
+      query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
+    });
+  } else {
+    router.push({
+      path: '/login',
+    });
+  }
 };
 
 const navToGitHub = () => {

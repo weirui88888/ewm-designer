@@ -13,11 +13,10 @@ import { useRoute } from 'vue-router';
 import { useLocale } from '@/locales/useLocale';
 import { RouteMeta } from '@/types/interface';
 
+const route = useRoute();
 const { locale } = useLocale();
 
 const crumbs = computed(() => {
-  const route = useRoute();
-
   const pathArray = route.path.split('/');
   pathArray.shift();
 

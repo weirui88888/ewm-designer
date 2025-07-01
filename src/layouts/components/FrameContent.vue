@@ -1,6 +1,6 @@
 <template>
   <div :class="prefixCls" :style="getWrapStyle">
-    <t-loading :loading="loading" size="large" :style="getWrapStyle">
+    <t-loading :loading="loading" size="small" :style="getWrapStyle">
       <iframe ref="frameRef" :src="frameSrc" :class="`${prefixCls}__main`" @load="hideLoading"></iframe>
     </t-loading>
   </div>
@@ -60,6 +60,7 @@ function calcHeight() {
   const contentPadding = parseFloat(paddingTBXxl) * 2;
   const footerDom = document.querySelector('.t-layout__footer');
   const footerHeight = showFooter ? getOuterHeight(footerDom) : 0;
+  console.log(footerHeight);
   const top = headerHeight + navHeight + breadcrumbHeight + contentPadding + footerHeight + 2;
   heightRef.value = window.innerHeight - top;
   clientHeight = document.documentElement.clientHeight - top;
