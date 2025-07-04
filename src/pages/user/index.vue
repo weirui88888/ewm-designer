@@ -81,6 +81,8 @@
         </t-row>
       </t-card>
     </t-col>
+
+    <t-guide v-model="welcomStep" :steps="steps" @finish="handleFinish" @skip="handleSkip" />
   </t-row>
 </template>
 <script lang="ts">
@@ -94,7 +96,7 @@ import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/compon
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import type { DateRangeValue } from 'tdesign-vue-next';
-import { computed, nextTick, onMounted, onUnmounted, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import ProductAIcon from '@/assets/assets-product-1.svg';
 import ProductBIcon from '@/assets/assets-product-2.svg';
@@ -114,6 +116,7 @@ let lineContainer: HTMLElement;
 let lineChart: echarts.ECharts;
 const store = useSettingStore();
 const chartColors = computed(() => store.chartColors);
+const welcomStep = ref(-1);
 
 const onLineChange = (value: DateRangeValue) => {
   lineChart.setOption(
@@ -144,11 +147,16 @@ const updateContainer = () => {
     height: lineContainer.clientHeight,
   });
 };
-
 onMounted(() => {
   nextTick(() => {
     initChart();
   });
+  if (!store.hasShowWelcomeStep) {
+    store.hasShowWelcomeStep = true;
+    setTimeout(() => {
+      welcomStep.value = 0;
+    }, 800);
+  }
   window.addEventListener('resize', updateContainer, false);
 });
 
@@ -177,6 +185,31 @@ watch(
     changeChartsTheme([lineChart]);
   },
 );
+
+const steps: any = [
+  {
+    element: '.user-info-list',
+    title: '用户信息',
+    body: '这里展示你的个人用户信息',
+    placement: 'bottom-right',
+  },
+  {
+    element: '.content-container',
+    title: '核心数据',
+    body: '这里能看到你的应用的核心数据',
+    placement: 'bottom',
+  },
+  {
+    element: '.user-team',
+    title: '团队信息',
+    body: '这里能看到团队的成员信息',
+    placement: 'right',
+  },
+];
+
+const handleFinish = () => {};
+
+const handleSkip = () => {};
 </script>
 
 <style lang="less" scoped>

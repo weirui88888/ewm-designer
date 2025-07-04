@@ -13,6 +13,7 @@ const state: Record<string, any> = {
   showSettingPanel: false,
   colorList: {} as TColorSeries,
   chartColors: LIGHT_CHART_COLORS,
+  hasShowWelcomeStep: false,
 };
 
 export type TState = typeof state;
@@ -101,7 +102,7 @@ export const useSettingStore = defineStore('setting', {
     },
   },
   persist: {
-    paths: [...keys(STYLE_CONFIG), 'colorList', 'chartColors'],
+    paths: [...keys(STYLE_CONFIG), 'colorList', 'chartColors', 'hasShowWelcomeStep'],
   },
 });
 
