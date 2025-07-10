@@ -117,6 +117,11 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     colKey: 'name',
     fixed: 'left',
   },
+  {
+    title: '合同唯一编码',
+    width: 340,
+    colKey: 'uuid',
+  },
   { title: t('pages.listBase.contractStatus'), colKey: 'status', width: 160 },
   {
     title: t('pages.listBase.contractNum'),

@@ -16,8 +16,8 @@ const host = import.meta.env.VITE_IS_USE_MOCK === 'true' ? '' : import.meta.env.
 // 数据处理，方便区分多种处理方式
 const transform: AxiosTransform = {
   // 处理请求数据。如果数据不是预期格式，可直接抛出错误
-  transformRequestHook: (res, options) => {
-    const { isTransformResponse, isReturnNativeResponse } = options;
+  transformResponseHook: (res, options) => {
+    const { isTransformResponse, isReturnNativeResponse, dataHandle = (data) => data } = options;
 
     // 如果204无内容直接返回
     const method = res.config.method?.toLowerCase();
@@ -47,7 +47,7 @@ const transform: AxiosTransform = {
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = data && code === 0;
     if (hasSuccess) {
-      return data.data;
+      return dataHandle(data.data);
     }
 
     throw new Error(`请求接口错误, 错误码: ${code}`);

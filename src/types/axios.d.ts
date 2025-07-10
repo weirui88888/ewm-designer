@@ -4,6 +4,7 @@ import type { AxiosRequestConfig } from 'axios';
  * Axios请求配置
  */
 export interface RequestOptions {
+  dataHandle?: (data: any) => any;
   /**
    * 接口地址
    *

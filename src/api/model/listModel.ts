@@ -11,6 +11,7 @@ export interface ListModel {
   paymentType: number;
   status: number;
   updateTime: Date;
+  [key: string]: any;
 }
 
 export interface CardListResult {

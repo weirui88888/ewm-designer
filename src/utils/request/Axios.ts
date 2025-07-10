@@ -253,7 +253,7 @@ export class VAxios {
 
     const opt: RequestOptions = { ...requestOptions, ...options };
 
-    const { beforeRequestHook, requestCatchHook, transformRequestHook } = transform || {};
+    const { beforeRequestHook, requestCatchHook, transformResponseHook } = transform || {};
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);
     }
@@ -262,14 +262,14 @@ export class VAxios {
     conf = this.supportFormData(conf);
     // 支持params数组参数格式化，因axios默认的toFormData即为brackets方式，无需配置paramsSerializer为qs，有需要可解除注释，参数参考qs文档
     // conf = this.supportParamsStringify(conf);
-
     return new Promise((resolve, reject) => {
       this.instance
-        .request<any, AxiosResponse<Result>>(!config.retryCount ? conf : config)
+        .request<any, AxiosResponse<Result>>(conf)
         .then((res: AxiosResponse<Result>) => {
-          if (transformRequestHook && isFunction(transformRequestHook)) {
+          if (transformResponseHook && isFunction(transformResponseHook)) {
             try {
-              const ret = transformRequestHook(res, opt);
+              const ret = transformResponseHook(res, opt);
+              console.log(ret);
               resolve(ret);
             } catch (err) {
               reject(err || new Error('请求错误!'));
